@@ -1,29 +1,25 @@
 package be.thebeehive.tdd.todoapp.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
-@Table(name = "todos")
+@Table(name = "TODOS")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class TodoEntity {
     @Id
     @GeneratedValue
+    @Column(name = "TODO_ID", unique = true, nullable = false, updatable = false)
     private int todoId;
-
-    public TodoEntity() {
-    }
-
-    public TodoEntity(int todoId) {
-        this.todoId = todoId;
-    }
-
-    public int getTodoId() {
-        return todoId;
-    }
-
-    public void setTodoId(int todoId) {
-        this.todoId = todoId;
-    }
 }
