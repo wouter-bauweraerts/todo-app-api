@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import be.thebeehive.tdd.todoapp.api.dto.TodoDto;
+import be.thebeehive.tdd.todoapp.api.exception.NotFoundException;
 import be.thebeehive.tdd.todoapp.repository.TodoRepository;
 import be.thebeehive.tdd.todoapp.service.mapper.TodoMapper;
 
@@ -22,5 +23,11 @@ public class TodoService {
         return mapper.toTodoDto(
                 todoRepository.findAll()
         );
+    }
+
+    public TodoDto findById(int todoId) {
+        return todoRepository.findById(todoId)
+                .map(mapper::toDto)
+                .orElseThrow(() -> NotFoundException.withId(todoId));
     }
 }

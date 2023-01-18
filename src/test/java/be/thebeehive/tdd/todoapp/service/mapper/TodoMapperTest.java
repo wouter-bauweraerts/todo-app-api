@@ -12,6 +12,11 @@ class TodoMapperTest {
     TodoMapper mapper = Mappers.getMapper(TodoMapper.class);
 
     @Test
+    void toDtoMapsNullToNull() {
+        assertThat(mapper.toDto(null)).isNull();
+    }
+
+    @Test
     void toDtoMapsEntityAsExpected() {
         var entity = TodoEntityFixtures.todoEntity();
         var dto = TodoDto.builder()
