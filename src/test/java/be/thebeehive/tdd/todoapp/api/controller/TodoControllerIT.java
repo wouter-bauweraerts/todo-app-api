@@ -4,14 +4,18 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,13 +29,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 
+import be.thebeehive.tdd.todoapp.api.dto.CreateTodoDto;
+import be.thebeehive.tdd.todoapp.api.dto.CreateTodoFixtures;
 import be.thebeehive.tdd.todoapp.api.dto.TodoDto;
+import be.thebeehive.tdd.todoapp.api.dto.TodoDtoFixtures;
 import be.thebeehive.tdd.todoapp.model.TodoEntity;
 import be.thebeehive.tdd.todoapp.model.TodoEntityFixtures;
 import be.thebeehive.tdd.todoapp.repository.TodoRepository;
@@ -73,8 +82,8 @@ class TodoControllerIT {
         when(todoRepository.findById(todoId)).thenReturn(empty());
 
         mockMvc.perform(
-                get("/todo/%s".formatted(todoId))
-        ).andExpect(status().isNotFound())
+                        get("/todo/%s".formatted(todoId))
+                ).andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.msg").value("Todo with id %s not found".formatted(todoId)));
     }
@@ -83,8 +92,8 @@ class TodoControllerIT {
     void getTodoByIdReturnsExpectedResult() throws Exception {
         var entity = TodoEntityFixtures.todoEntity();
         var dto = TodoDto.builder()
-                        .todoId(entity.getTodoId())
-                                .build();
+                .todoId(entity.getTodoId())
+                .build();
 
         when(todoRepository.findById(entity.getTodoId())).thenReturn(of(entity));
 
@@ -95,17 +104,71 @@ class TodoControllerIT {
                 .andExpect(content().json(objectMapper.writeValueAsString(dto), true));
     }
 
+    @ParameterizedTest
+    @MethodSource("createWithInvalidBodySource")
+    void createTodoWithEmptyBodyReturnsBadRequestWithExpectedMessage(CreateTodoDto dto, String msg) throws Exception {
+        mockMvc.perform(buildCreateTodoRequest(dto))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.msg").value(msg));
+
+        verifyNoInteractions(todoRepository);
+    }
+
+    @Test
+    void createTodoSuccessReturnsExpectedDto() throws Exception {
+        var createDto = CreateTodoFixtures.createTodoDto();
+        var entityToSave = TodoEntityFixtures.unpersistedEntityWithDescription(createDto.description());
+        var savedEntity = TodoEntityFixtures.todoEntityWithDescription(createDto.description());
+        var todoDto = TodoDtoFixtures.fromEntity(savedEntity);
+
+        when(todoRepository.save(entityToSave)).thenReturn(savedEntity);
+
+        mockMvc.perform(buildCreateTodoRequest(createDto))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(todoDto), true));
+
+        verify(todoRepository).save(entityToSave);
+    }
+
+    private MockHttpServletRequestBuilder buildCreateTodoRequest(CreateTodoDto dto) throws JsonProcessingException {
+        MockHttpServletRequestBuilder requestBuilder = post("/todo")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        return Objects.isNull(dto)
+                ? requestBuilder
+                : requestBuilder.content(objectMapper.writeValueAsString(dto));
+    }
+
+
     private static Stream<Arguments> getTodosSource() {
         return Stream.of(
                 Arguments.of(emptyList(), emptyList()),
-                Arguments.of(
-                        singletonList(new TodoEntity(1)),
-                        singletonList(new TodoDto(1))
-                ),
-                Arguments.of(
-                        List.of(new TodoEntity(1), new TodoEntity(2)),
-                        List.of(new TodoDto(1), new TodoDto(2))
-                )
+                getTodosArguments(1),
+                getTodosArguments(2),
+                getTodosArguments(25)
         );
+    }
+
+    private static Stream<Arguments> createWithInvalidBodySource() {
+        return Stream.of(
+                Arguments.of(null, "Required requestbody is missing"),
+                Arguments.of(new CreateTodoDto(""), "description is required"),
+                Arguments.of(new CreateTodoDto(FAKER.lorem().characters(255, 600)), "description is too long. Max length: 255"),
+                Arguments.of(new CreateTodoDto(" "), "description is required"),
+                Arguments.of(new CreateTodoDto(null), "description is required")
+        );
+    }
+
+    private static Arguments getTodosArguments(int size) {
+        List<TodoEntity> entities = new ArrayList<>();
+        List<TodoDto> dtos = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            TodoEntity entity = TodoEntityFixtures.todoEntity();
+            entities.add(entity);
+            dtos.add(TodoDtoFixtures.fromEntity(entity));
+        }
+        return Arguments.of(entities, dtos);
     }
 }

@@ -12,6 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
+import be.thebeehive.tdd.todoapp.api.dto.CreateTodoDto;
 import be.thebeehive.tdd.todoapp.api.dto.TodoDto;
 import be.thebeehive.tdd.todoapp.model.TodoEntity;
 
@@ -24,8 +25,10 @@ public interface TodoMapper {
                 .toList();
     }
 
-    @Mappings({
-            @Mapping(source = "todoId", target = "todoId", defaultValue = "-1")
-    })
+    @Mapping(source = "todoId", target = "todoId", defaultValue = "-1")
     TodoDto toDto(TodoEntity entity);
+
+    @Mapping(source = "description", target = "description")
+    @Mapping(target = "todoId", ignore = true)
+    TodoEntity toEntity(CreateTodoDto dto);
 }
