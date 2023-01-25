@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import be.thebeehive.tdd.todoapp.api.dto.ErrorMessage;
 import be.thebeehive.tdd.todoapp.api.exception.NotFoundException;
+import be.thebeehive.tdd.todoapp.api.exception.TodoAlreadyCompletedException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,5 +34,12 @@ public class TodoAppRestAdvice {
     public ErrorMessage handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         log.warn("Invalid body", ex);
         return new ErrorMessage(ex.getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorMessage handleTodoAlreadyCompleted(TodoAlreadyCompletedException ex) {
+        log.warn("Todo already completed", ex);
+        return new ErrorMessage(ex.getMessage());
     }
 }

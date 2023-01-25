@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,7 +38,7 @@ class CompleteTodoIT {
     @Test
     void completeTodoCompletesTodoAsExpectedAndReturnsExpectedDto() throws Exception {
 
-        mockMvc.perform(put("/todo/complete/1"))
+        completeTodo()
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.todoId").value(1))
                 .andExpect(jsonPath("$.description").value("Do the dishes"))
@@ -53,4 +54,19 @@ class CompleteTodoIT {
                 );
 
     }
+
+    @Test
+    void completeTodoTwiceThrowsExpected() throws Exception {
+
+        completeTodo();
+        completeTodo()
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.msg").value("Todo 1 is already completed"));
+
+    }
+
+    private ResultActions completeTodo() throws Exception {
+        return mockMvc.perform(put("/todo/complete/1"));
+    }
+
 }
