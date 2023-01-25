@@ -8,6 +8,7 @@ public class TodoEntityFixtures {
     public static TodoEntity todoEntity() {
         return TodoEntity.builder()
                 .todoId(Math.toIntExact(FAKER.number().randomNumber(4, false)))
+                .description(truncateIfRequired(FAKER.yoda().quote()))
                 .build();
     }
 
@@ -19,14 +20,31 @@ public class TodoEntityFixtures {
 
     public static TodoEntity unpersistedEntityWithDescription(String description) {
         return TodoEntity.builder()
-                .description(description)
+                .description(truncateIfRequired(description))
                 .build();
     }
 
     public static TodoEntity todoEntityWithDescription(String description) {
         return TodoEntity.builder()
                 .todoId(Math.toIntExact(FAKER.number().randomNumber(4, false)))
-                .description(description)
+                .description(truncateIfRequired(description))
                 .build();
+    }
+
+    public static TodoEntity copy(TodoEntity original, String description) {
+        return original.toBuilder()
+                .description(truncateIfRequired(description))
+                .build();
+    }
+
+    public static TodoEntity copy(TodoEntity original) {
+        return original.toBuilder()
+                .build();
+    }
+
+    private static String truncateIfRequired(String input) {
+        return input.length() > 255
+                ? input.substring(0, 250)
+                : input;
     }
 }

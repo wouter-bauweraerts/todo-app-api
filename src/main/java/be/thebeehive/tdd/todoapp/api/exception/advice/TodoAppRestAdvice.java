@@ -9,24 +9,29 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import be.thebeehive.tdd.todoapp.api.dto.ErrorMessage;
 import be.thebeehive.tdd.todoapp.api.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 public class TodoAppRestAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage handleNotFound(NotFoundException ex) {
+        log.warn("Todo not found!", ex);
         return new ErrorMessage(ex.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage handleMessageNotReadable(HttpMessageNotReadableException ex) {
+        log.warn("Body not readable", ex);
         return new ErrorMessage("Required requestbody is missing");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        log.warn("Invalid body", ex);
         return new ErrorMessage(ex.getFieldError().getDefaultMessage());
     }
 }

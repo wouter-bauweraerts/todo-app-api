@@ -17,7 +17,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "TODOS")
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,5 +30,7 @@ public class TodoEntity {
     private Integer todoId;
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
-
+    @Builder.Default
+    @Column(name = "COMPLETED", nullable = false)
+    private boolean complete = false;
 }

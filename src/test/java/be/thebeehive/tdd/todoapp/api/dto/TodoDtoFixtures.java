@@ -18,7 +18,13 @@ public class TodoDtoFixtures {
     public static TodoDto todoDtoFixture() {
         return TodoDto.builder()
                 .todoId(FAKER.number().numberBetween(0, 100))
-                .description(FAKER.yoda().quote())
+                .description(truncateIfRequired(FAKER.yoda().quote()))
                 .build();
+    }
+
+    private static String truncateIfRequired(String input) {
+        return input.length() > 255
+                ? input.substring(0, 250)
+                : input;
     }
 }
