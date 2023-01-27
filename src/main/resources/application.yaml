@@ -3,7 +3,6 @@ spring:
     user: todo-app
     password: verysecurepassword01!
     enabled: true
-    url: jdbc:postgresql://localhost:5432/todo
 
   datasource:
     username: todo-app
