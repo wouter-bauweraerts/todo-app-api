@@ -18,7 +18,9 @@ import be.thebeehive.tdd.todoapp.api.dto.CreateTodoDto;
 import be.thebeehive.tdd.todoapp.api.dto.TodoDto;
 import be.thebeehive.tdd.todoapp.api.dto.UpdateTodoDto;
 import be.thebeehive.tdd.todoapp.service.TodoService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/todo")
 public class TodoController {
@@ -30,32 +32,38 @@ public class TodoController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TodoDto> findAll() {
+        log.info("Find all todos");
         return todoService.findAll();
     }
 
     @GetMapping(value = "/incomplete", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TodoDto> findAllIncomplete() {
+        log.info("Find all incomplete todos");
         return todoService.findAllIncomplete();
     }
 
 
     @GetMapping(value = "/{todoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public TodoDto findById(@PathVariable int todoId) {
+        log.info("Find todo by id: {}", todoId);
         return todoService.findById(todoId);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public TodoDto createTodo(@Valid @RequestBody @NotNull(message = "Requestbody is missing") CreateTodoDto createTodoDto) {
+        log.info("Create todo: {}", createTodoDto.description());
         return todoService.create(createTodoDto);
     }
 
     @PutMapping(value = "/{todoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public TodoDto updateTodo(@PathVariable int todoId, @Valid @RequestBody @NotNull(message = "Requestbody is missing") UpdateTodoDto updateTodoDto) {
+        log.info("Update todo: {}", todoId);
         return todoService.update(todoId, updateTodoDto);
     }
 
     @PutMapping(value = "/complete/{todoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TodoDto updateTodo(@PathVariable int todoId) {
+    public TodoDto completeTodo(@PathVariable int todoId) {
+        log.info("Complete todo: {}", todoId);
         return todoService.complete(todoId);
     }
 }
