@@ -7,7 +7,7 @@ spring:
   datasource:
     username: todo-app
     password: verysecurepassword01!
-    url: jdbc:postgresql://localhost:5432/todo
+    url: jdbc:postgresql://todoapp_db_1:5432/todo
     driver-class-name: org.postgresql.Driver
 
   jpa:
