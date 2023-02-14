@@ -16,16 +16,30 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-      - run: java -version
-      - run: ./mvnw clean package
+      - name: Maven build
+        run: ./mvnw clean package
+      - name: Save target artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: maven-output
+          path: target/
 
   publish:
     runs-on: self-hosted
     needs: build
     steps:
       - uses: actions/checkout@v3
-      - run: docker build . -t localhost:32000/todo-api:${{ github.run_number }}
-      - run: docker push localhost:32000/todo-api:${{ github.run_number }}
+      - name: Retrieve maven output
+        uses: actions/download-artifact@v2
+        with:
+          name: maven-output
+          path: target/
+
+      - name: Build docker container
+        run: docker build . -t localhost:32000/todo-api:${{ github.run_number }}
+        
+      - name: Publish docker container
+        run: docker push localhost:32000/todo-api:${{ github.run_number }}
 
   deploy:
     runs-on: self-hosted
