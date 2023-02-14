@@ -13,7 +13,7 @@ spec:
         app: "serviceTodoAppApi"
     spec:
       containers:
-        - image: {{ .Values.todoAppapi.image }}
+        - image: {{ .Values.todoAppApi.image }}
           imagePullPolicy: Always
           name: "todo"
           ports:
