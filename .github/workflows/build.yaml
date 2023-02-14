@@ -19,11 +19,17 @@ jobs:
       - run: java -version
       - run: ./mvnw clean package
 
-      # push container to registry with tag Build-${{ github.run_number}}
+  publish:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker build . -t localhost:32000/Build:${{ github.run_number }}
+      - run: docker push localhost:32000/Build:${{ github.run_number }}
 
   deploy:
     runs-on: self-hosted
-    needs: build
+    needs: publish
     steps:
       - uses: actions/checkout@v3
 
