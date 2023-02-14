@@ -7,6 +7,6 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: {{ .Values.todo-app-api.port }}
+  - port: {{ .Values.todoAppApi.port }}
   selector:
     app: "serviceTodoAppApi"
