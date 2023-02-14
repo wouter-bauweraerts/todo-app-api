@@ -5,12 +5,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: "serviceTodoAppApi"
+      app: serviceTodoAppApi
   replicas: 5
   template:
     metadata:
       labels:
-        app: "serviceTodoAppApi"
+        app: serviceTodoAppApi
     spec:
       containers:
         - image: {{ .Values.todoAppApi.image }}
