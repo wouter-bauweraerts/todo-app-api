@@ -18,6 +18,8 @@ jobs:
           distribution: 'temurin'
       - run: java -version
       - run: ./mvnw clean package
+      - run: mvn package
+    
       # push container to registry with tag Build-${{ github.run_number}}
 
   deploy:
