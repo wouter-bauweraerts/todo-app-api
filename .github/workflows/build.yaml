@@ -11,5 +11,18 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - run: kubectl get pods --all-namespaces
-      - run: helm ls -A
+      - run: ./mvnw clean package
+      # push container to registry with tag Build-${{ github.run_number}}
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: ls -l
+
+      
+      #- working-directory: helm/
+      #  run: helm upgrade -i todo-app-api --set todo-app-api.tag=Build-${{ github.run_number}} -n todo-app-api --create-namespace
+        
