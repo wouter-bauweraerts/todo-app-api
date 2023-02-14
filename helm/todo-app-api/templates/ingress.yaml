@@ -12,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: serviceTodoAppApi
+                name: service-todo-app-api
                 port:
                   number: {{ .Values.todoAppApi.port }}
