@@ -26,6 +26,14 @@ sudo usermod -aG docker ubuntu
 newgrp docker
 ```
 
+### Kubernetes configuration
+
+Configure helm and k9s to deploy to the correct cluster
+
+```shell
+microk8s config > ~/.kube/config
+```
+
 ### Self-hosted runner
 
 Configure a new runner in your github project
