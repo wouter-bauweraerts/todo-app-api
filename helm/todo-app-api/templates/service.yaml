@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviceTodoAppApi
+  labels:
+    app: serviceTodoAppApi
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.todo-app-api.port }}
+  selector:
+    app: "serviceTodoAppApi"
