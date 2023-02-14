@@ -14,4 +14,4 @@ spec:
               service:
                 name: serviceTodoAppApi
                 port:
-                  number: {{ .Values.todo-app-api.port }}
+                  number: {{ .Values.todAppApi.port }}

@@ -13,9 +13,9 @@ spec:
         app: "serviceTodoAppApi"
     spec:
       containers:
-        - image: {{ .Values.image.repository }}/todo:{{ .Values.todo-app-api.tag }}
+        - image: {{ .Values.todoAppapi.image }}
           imagePullPolicy: Always
           name: "todo"
           ports:
-            - containerPort: {{ .Values.todo-app-api.port }}
+            - containerPort: {{ .Values.todoAppApi.port }}
               protocol: TCP
