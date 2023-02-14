@@ -1,0 +1,6 @@
+image:
+  repository: ...
+
+todo-app-api:
+  tag: build-0
+  port: 80
