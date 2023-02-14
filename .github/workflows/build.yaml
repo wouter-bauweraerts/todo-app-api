@@ -2,7 +2,7 @@ name: build-todo-app-api
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
   workflow_dispatch:
 
@@ -11,15 +11,14 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: "17"
+          distribution: "temurin"
       - run: java -version
       - run: ./mvnw clean package
-      - run: mvn package
-    
+
       # push container to registry with tag Build-${{ github.run_number}}
 
   deploy:
@@ -30,7 +29,5 @@ jobs:
 
       - run: ls -l
 
-      
       #- working-directory: helm/
       #  run: helm upgrade -i todo-app-api --set todo-app-api.tag=Build-${{ github.run_number}} -n todo-app-api --create-namespace
-        
