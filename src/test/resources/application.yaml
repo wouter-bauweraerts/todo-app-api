@@ -1,14 +1,11 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: sa
     password:
+    url: jdbc:tc:postgresql:latest:///cv
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: validate
   flyway:
-    enabled: false
+    enabled: true

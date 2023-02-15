@@ -1,0 +1,9 @@
+todoAppApi:
+  image: ...
+  port: 80
+
+db:
+  datafolder: /home/ubuntu/postgresql
+  name: todo
+  username: todo-app
+  password: verysecurepassword01!
