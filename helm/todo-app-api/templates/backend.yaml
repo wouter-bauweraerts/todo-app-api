@@ -13,11 +13,11 @@ spec:
         app: serviceTodoAppApi
     spec:
       containers:
-        - image: { { .Values.todoAppApi.image } }
+        - image: {{ .Values.todoAppApi.image }}
           imagePullPolicy: Always
           name: "todo"
           ports:
-            - containerPort: { { .Values.todoAppApi.port } }
+            - containerPort: {{ .Values.todoAppApi.port }}
               protocol: TCP
           env:
             - name: SPRING_DATASOURCE_URL
