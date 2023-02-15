@@ -18,15 +18,11 @@ jobs:
           distribution: "temurin"
       - name: Maven build
         run: ./mvnw clean package
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: "localhost:32000/todo-api:${{ github.run_number }}"
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
+      - name: Build docker container
+        run: docker build . -t localhost:32000/todo-api:${{ github.run_number }}
+      - name: Publish docker container
+        run: docker push localhost:32000/todo-api:${{ github.run_number }}
+      
   deploy:
     runs-on: self-hosted
     needs: build
