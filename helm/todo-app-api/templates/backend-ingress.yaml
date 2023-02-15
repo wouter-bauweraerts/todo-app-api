@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: todo-app-api-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /api
 spec:
   rules:
     - http:
