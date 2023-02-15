@@ -17,7 +17,7 @@ spec:
           imagePullPolicy: Always
           name: "todo"
           ports:
-            - containerPort: {{ .Values.todoAppApi.port }}
+            - containerPort: 8080
               protocol: TCP
           env:
             - name: SPRING_DATASOURCE_URL
