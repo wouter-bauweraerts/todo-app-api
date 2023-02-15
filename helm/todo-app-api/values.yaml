@@ -1,6 +1,6 @@
 todoAppApi:
   image: ...
-  port: 8080
+  port: 80
 
 db:
   datafolder: /home/ubuntu/postgresql
