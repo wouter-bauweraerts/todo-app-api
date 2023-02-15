@@ -3,11 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: psql-claim
 spec:
-  storageClassName: hostPath
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
+  accessModes: 
+  - ReadWriteOnce
+  resources: 
+    requests: 
       storage: 2Gi
   selector:
     matchLabels:
