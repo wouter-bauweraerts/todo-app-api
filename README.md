@@ -31,6 +31,7 @@ newgrp docker
 Configure helm and k9s to deploy to the correct cluster
 
 ```shell
+microk8s enable hostpath-storage
 microk8s config > ~/.kube/config
 ```
 
