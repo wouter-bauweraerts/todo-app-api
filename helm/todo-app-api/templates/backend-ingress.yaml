@@ -15,4 +15,4 @@ spec:
               service:
                 name: service-todo-app-api
                 port:
-                  number: {{ .Values.todoAppApi.port }}
+                  number: 8080
