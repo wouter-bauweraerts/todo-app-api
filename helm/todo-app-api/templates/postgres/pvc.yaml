@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: psql-claim
 spec:
-  storageClassName: local-storage
+  storageClassName: hostPath
   accessModes:
     - ReadWriteOnce
   resources:
