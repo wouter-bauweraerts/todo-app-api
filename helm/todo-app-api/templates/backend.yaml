@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "todo-app-api"
+spec:
+  selector:
+    matchLabels:
+      app: serviceTodoAppApi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: serviceTodoAppApi
+    spec:
+      containers:
+        - image: { { .Values.todoAppApi.image } }
+          imagePullPolicy: Always
+          name: "todo"
+          ports:
+            - containerPort: { { .Values.todoAppApi.port } }
+              protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/{{.Values.db.name}}"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.db.username }} 
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.db.password }}
+            - name: SPRING_FLYWAY_USER
+              value: {{ .Values.db.username }} 
+            - name: SPRING_FLYWAY_PASSWORD
+              value: {{ .Values.db.password }}

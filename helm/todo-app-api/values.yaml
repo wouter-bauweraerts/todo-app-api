@@ -4,3 +4,6 @@ todoAppApi:
 
 db:
   datafolder: /home/ubuntu/postgresql
+  name: db
+  user: todo-app
+  password: verysecurepassword01!
